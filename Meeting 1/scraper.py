@@ -4,6 +4,8 @@ chrome_options = Options()
 chrome_options.headless = True
 driver = webdriver.Chrome(options=chrome_options)
 
+
+
 start_url = "https://www.wikipedia.org"
 driver.get(start_url)
 

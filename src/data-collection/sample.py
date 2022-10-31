@@ -42,7 +42,7 @@ try:
         })
 
         for idx, item in enumerate(response.reply.searchResult.item):
-            
+
             id = item.itemId
             title = item.title
             globalId = item.globalId
@@ -62,7 +62,8 @@ try:
             sellerPositivePercent = item.sellerInfo.positiveFeedbackPercent
             sellerName = item.sellerInfo.sellerUserName
             sellerIsTopRated = 1 if item.sellerInfo.topRatedSeller == 'true' else 0
-            price = -1
+            price = item.sellingStatus.convertedCurrentPrice.value if hasattr(item.sellingStatus, "convertedCurrentPrice") else -1
+            # price = -1
             currency = -1
             bids = -1
 

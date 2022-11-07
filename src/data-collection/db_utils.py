@@ -1,11 +1,10 @@
 import sqlite3
 
-
-def QueryAll():
+def QueryAll(table):
     conn = sqlite3.connect("listings.db")
     c = conn.cursor()
 
-    c.execute("SELECT * FROM listings")
+    c.execute(f'SELECT * FROM {table}')
     res = c.fetchall()
 
     conn.close()
@@ -25,31 +24,50 @@ def Query(exp):
     return res
 
 
-def InsertListings(listings):
+def InsertListings(table, listings):
     conn = sqlite3.connect("listings.db")
     c = conn.cursor()
 
-    c.executemany("INSERT OR IGNORE INTO listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", listings)
+    c.executemany(f'INSERT OR IGNORE INTO {table} VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', listings)
 
     conn.commit()
     conn.close()
 
 
-def ClearAll():
+def ClearAll(table):
     conn = sqlite3.connect("listings.db")
     c = conn.cursor()
 
-    c.execute("DELETE FROM listings")
+    c.execute(f'DELETE FROM {table}')
 
     conn.commit()
     conn.close()
 
 
-def DropTable():
+def QueryAllFinished(table):
     conn = sqlite3.connect("listings.db")
     c = conn.cursor()
 
-    c.execute("DROP TABLE listings")
+    c.execute(f'SELECT * FROM {table} WHERE endTime < datetime("now") AND price = -1')
+
+    res = c.fetchall()
+    
+    conn.close()
+    
+    return res
+
+
+def UpdateItem(table, id, price, bids):
+    conn = sqlite3.connect("listings.db")
+    c = conn.cursor()
+    
+    c.execute(f"""
+        UPDATE {table}
+        SET price=?,
+            bids=?
+        WHERE
+            id=?
+    """, (price, bids, id))
 
     conn.commit()
     conn.close()
